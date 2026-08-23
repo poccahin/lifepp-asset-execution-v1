@@ -1,16 +1,23 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/transaction-message.schema.json",
-  "title": "CanonicalAssetTransactionMessage",
-  "type": "object",
-  "required": ["artifact_type", "artifact_version", "chain_id", "treasury_vault_address", "destination", "asset", "amount_base_units", "recent_block_reference", "instruction_set", "transaction_message_root"],
-  "properties": {
-    "artifact_type": {"const": "CanonicalAssetTransactionMessage"},
-    "artifact_version": {"const": "1.0.0"},
-    "amount_base_units": {"type": "string", "pattern": "^[0-9]+$"},
-    "instruction_set": {"type": "array", "minItems": 1},
-    "transaction_message_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/transaction-message.schema.json",
+  "title":"CanonicalAssetTransactionMessage",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","claim_label","evidence_class","chain_id","treasury_vault_address","destination","asset","amount_base_units","recent_block_reference","instruction_set","transaction_message_root"],
+  "properties":{
+    "artifact_type":{"const":"CanonicalAssetTransactionMessage"},
+    "artifact_version":{"const":"1.0.0"},
+    "claim_label":{"enum":["[SIM]","[A]","[M]","[D]","[C]","[EXP]","[RET]"]},
+    "evidence_class":{"enum":["SIMULATED","LIVE_VERIFIED"]},
+    "chain_id":{"type":"string","minLength":1},
+    "treasury_vault_address":{"type":"string","minLength":1},
+    "destination":{"type":"string","minLength":1},
+    "asset":{"type":"string","minLength":1},
+    "amount_base_units":{"type":"string","pattern":"^[0-9]+$"},
+    "recent_block_reference":{"type":"string","minLength":1},
+    "instruction_set":{"type":"array","minItems":1,"items":{"type":"object","minProperties":1}},
+    "transaction_message_root":{"$ref":"#/$defs/root"}
   },
-  "additionalProperties": false
+  "$defs":{"root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}
 }
-

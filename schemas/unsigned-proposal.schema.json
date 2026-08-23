@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/unsigned-proposal.schema.json",
+  "title":"UnsignedAssetExecutionProposal",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","claim_label","evidence_class","canonical_message","transaction_message_root","gate_decision_root","signatures","private_keys_received","voter_key_custody","transaction_submission","asset_execution_enabled","proposal_root"],
+  "properties":{
+    "artifact_type":{"const":"UnsignedAssetExecutionProposal"},
+    "artifact_version":{"const":"2.0.0"},
+    "claim_label":{"const":"[SIM]"},
+    "evidence_class":{"const":"SIMULATED_PROPOSAL_ONLY"},
+    "canonical_message":{"type":"string","minLength":1},
+    "transaction_message_root":{"$ref":"#/$defs/root"},
+    "gate_decision_root":{"$ref":"#/$defs/root"},
+    "signatures":{"type":"array","maxItems":0},
+    "private_keys_received":{"const":false},
+    "voter_key_custody":{"const":false},
+    "transaction_submission":{"const":false},
+    "asset_execution_enabled":{"const":false},
+    "proposal_root":{"$ref":"#/$defs/root"}
+  },
+  "$defs":{"root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}
+}

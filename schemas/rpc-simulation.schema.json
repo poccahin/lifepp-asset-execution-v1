@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/rpc-simulation.schema.json",
+  "title":"AssetRpcSimulation",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","claim_label","evidence_class","phase","control_domain","rpc_endpoint_id","transaction_message_root","asset_execution_policy_root","simulated_at_epoch_seconds","result","post_state_root","simulation_root"],
+  "properties":{
+    "artifact_type":{"const":"AssetRpcSimulation"},
+    "artifact_version":{"const":"1.0.0"},
+    "claim_label":{"enum":["[SIM]","[EXP]","[RET]","[A]","[D]","[C]","[M]"]},
+    "evidence_class":{"enum":["SIMULATED","LIVE_VERIFIED"]},
+    "phase":{"enum":["INITIAL","PRE_EXECUTION"]},
+    "control_domain":{"type":"string","minLength":1},
+    "rpc_endpoint_id":{"type":"string","minLength":1},
+    "transaction_message_root":{"$ref":"#/$defs/root"},
+    "asset_execution_policy_root":{"$ref":"#/$defs/root"},
+    "simulated_at_epoch_seconds":{"type":"integer","minimum":0},
+    "result":{"enum":["WOULD_SUCCEED","WOULD_FAIL"]},
+    "post_state_root":{"$ref":"#/$defs/root"},
+    "simulation_root":{"$ref":"#/$defs/root"}
+  },
+  "$defs":{"root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}
+}

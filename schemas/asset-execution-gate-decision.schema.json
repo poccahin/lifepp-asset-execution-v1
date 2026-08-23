@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-gate-decision.schema.json",
+  "title":"AssetExecutionGateDecision",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","claim_label","evidence_class","transaction_message_root","asset_execution_policy_root","proposal_checks","live_execution_checks","proposal_only_authorized","live_execution_prerequisites_satisfied","transaction_submission_authorized","asset_execution_authorized","maximum_authorized_state","decision_root"],
+  "properties":{
+    "artifact_type":{"const":"AssetExecutionGateDecision"},
+    "artifact_version":{"const":"2.0.0"},
+    "claim_label":{"enum":["[SIM]","[A]"]},
+    "evidence_class":{"enum":["SIMULATED_PROPOSAL_VECTOR","FAIL_CLOSED_AUDIT"]},
+    "transaction_message_root":{"$ref":"#/$defs/root"},
+    "asset_execution_policy_root":{"$ref":"#/$defs/root"},
+    "proposal_checks":{"type":"object","additionalProperties":{"type":"boolean"}},
+    "live_execution_checks":{"type":"object","additionalProperties":{"type":"boolean"}},
+    "proposal_only_authorized":{"type":"boolean"},
+    "live_execution_prerequisites_satisfied":{"type":"boolean"},
+    "transaction_submission_authorized":{"const":false},
+    "asset_execution_authorized":{"const":false},
+    "maximum_authorized_state":{"enum":["DISARMED","PROPOSAL_ONLY"]},
+    "decision_root":{"$ref":"#/$defs/root"}
+  },
+  "$defs":{"root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}
+}

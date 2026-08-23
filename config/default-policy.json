@@ -12,6 +12,7 @@
   "required_treasury_voters": 4,
   "required_responsibility_coverage": 1,
   "permit_max_ttl_seconds": 900,
+  "pre_execution_simulation_max_age_seconds": 30,
   "requires_separate_a4_finality": true,
   "requires_finalized_post_state_receipt": true,
   "transaction_submission": false,
@@ -24,4 +25,3 @@
     "AHIN.IO"
   ]
 }
-

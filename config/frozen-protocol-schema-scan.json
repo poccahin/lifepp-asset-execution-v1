@@ -1,0 +1,34 @@
+{
+  "artifact_type": "FrozenProtocolAssetExecutionSchemaScan",
+  "artifact_version": "1.0.0",
+  "claim_label": "[A]",
+  "scan_scope": "PINNED_REPLACEMENT_HEADS_AND_PR_FILE_SURFACES",
+  "frozen_protocol_heads": {
+    "pocc": "8902b22c04511ac60d81f9f6e6d24d48350aa4d9",
+    "ahin": "1dc061616ab16c48cfef1b165f925a2fda99db1c",
+    "cai": "6048008a0e34897b172a9c3171d34ac12c692ada",
+    "chainrank": "c2cf581c786eb35fc2f9ec789838db9a98e1829b"
+  },
+  "searched_symbols": [
+    "AssetExecutionPolicyRoot",
+    "AssetExecutionPermit",
+    "asset_execution_enabled",
+    "lifepp.asset-execution.v1"
+  ],
+  "pull_request_file_inventory": [
+    {"repository":"poccahin/pocc","pull_request":199,"changed_file_count":87,"asset_schema_paths":[]},
+    {"repository":"poccahin/AHIN","pull_request":34,"changed_file_count":115,"asset_schema_paths":[]},
+    {"repository":"poccahin/cai","pull_request":8,"changed_file_count":23,"asset_schema_paths":[]},
+    {"repository":"poccahin/cr","pull_request":2,"changed_file_count":45,"asset_schema_paths":[]}
+  ],
+  "non_schema_asset_related_paths_observed": [
+    "poccahin/AHIN:src/components/governance/TreasuryCustodyCard.tsx",
+    "poccahin/AHIN:src/lib/payment/confirmSolanaTransaction.ts",
+    "poccahin/AHIN:src/server/gateNAssetProof.ts"
+  ],
+  "asset_execution_schema_root_binding_found": false,
+  "conclusion": "NO_MACHINE_VERIFIABLE_ASSET_EXECUTION_SCHEMA_ROOT_BINDING_FOUND",
+  "requires_separate_a4_epoch": true,
+  "protocol_epoch_created": "lifepp.asset-execution.v1",
+  "protocol_heads_modified": false
+}

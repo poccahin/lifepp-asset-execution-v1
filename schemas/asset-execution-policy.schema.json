@@ -1,21 +1,32 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-policy.schema.json",
-  "title": "AssetExecutionPolicy",
-  "type": "object",
-  "required": ["artifact_type", "artifact_version", "protocol_epoch", "current_state", "implementation_ceiling", "spending_limits_enabled", "transaction_submission", "asset_execution_enabled", "asset_recovery_executor", "asset_execution_policy_root"],
-  "properties": {
-    "artifact_type": {"const": "AssetExecutionPolicy"},
-    "artifact_version": {"const": "1.0.0"},
-    "protocol_epoch": {"const": "lifepp.asset-execution.v1"},
-    "current_state": {"enum": ["DISARMED", "SHADOW", "SIMULATION_ONLY", "PROPOSAL_ONLY", "CANARY_CAPPED", "LIMITED_LIVE", "BOUNDED_PRODUCTION"]},
-    "implementation_ceiling": {"const": "PROPOSAL_ONLY"},
-    "spending_limits_enabled": {"const": false},
-    "transaction_submission": {"const": false},
-    "asset_execution_enabled": {"const": false},
-    "asset_recovery_executor": {"const": "DISARMED"},
-    "asset_execution_policy_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-policy.schema.json",
+  "title":"AssetExecutionPolicy",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","protocol_epoch","claim_label","current_state","implementation_ceiling","spending_limits_enabled","live_execution_caps","required_rpc_control_domains","required_treasury_threshold","required_treasury_voters","required_responsibility_coverage","permit_max_ttl_seconds","pre_execution_simulation_max_age_seconds","requires_separate_a4_finality","requires_finalized_post_state_receipt","transaction_submission","asset_execution_enabled","asset_recovery_executor","prohibited_voter_key_holders","asset_execution_policy_root"],
+  "properties":{
+    "artifact_type":{"const":"AssetExecutionPolicy"},
+    "artifact_version":{"const":"1.0.0"},
+    "protocol_epoch":{"const":"lifepp.asset-execution.v1"},
+    "claim_label":{"const":"[A]"},
+    "current_state":{"enum":["DISARMED","SHADOW","SIMULATION_ONLY","PROPOSAL_ONLY","CANARY_CAPPED","LIMITED_LIVE","BOUNDED_PRODUCTION"]},
+    "implementation_ceiling":{"const":"PROPOSAL_ONLY"},
+    "spending_limits_enabled":{"const":false},
+    "live_execution_caps":{"type":"null"},
+    "required_rpc_control_domains":{"const":2},
+    "required_treasury_threshold":{"const":3},
+    "required_treasury_voters":{"const":4},
+    "required_responsibility_coverage":{"const":1},
+    "permit_max_ttl_seconds":{"type":"integer","minimum":1,"maximum":900},
+    "pre_execution_simulation_max_age_seconds":{"type":"integer","minimum":1,"maximum":60},
+    "requires_separate_a4_finality":{"const":true},
+    "requires_finalized_post_state_receipt":{"const":true},
+    "transaction_submission":{"const":false},
+    "asset_execution_enabled":{"const":false},
+    "asset_recovery_executor":{"const":"DISARMED"},
+    "prohibited_voter_key_holders":{"type":"array","minItems":4,"uniqueItems":true,"items":{"type":"string"}},
+    "asset_execution_policy_root":{"$ref":"#/$defs/root"}
   },
-  "additionalProperties": true
+  "$defs":{"root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"}}
 }
-

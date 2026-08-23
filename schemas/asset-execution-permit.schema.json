@@ -1,21 +1,46 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-permit.schema.json",
-  "title": "AssetExecutionPermit",
-  "type": "object",
-  "required": ["artifact_type", "artifact_version", "scope", "authorized_state", "transaction_message_root", "asset_execution_policy_root", "valid_from_epoch_seconds", "expires_at_epoch_seconds", "approval_references", "global_asset_authorization"],
-  "properties": {
-    "artifact_type": {"const": "AssetExecutionPermit"},
-    "artifact_version": {"const": "1.0.0"},
-    "scope": {"const": "EXACT_TRANSACTION_ONLY"},
-    "authorized_state": {"const": "PROPOSAL_ONLY"},
-    "transaction_message_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "asset_execution_policy_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "valid_from_epoch_seconds": {"type": "integer", "minimum": 0},
-    "expires_at_epoch_seconds": {"type": "integer", "minimum": 1},
-    "approval_references": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string"}},
-    "global_asset_authorization": {"const": false}
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-permit.schema.json",
+  "title":"AssetExecutionPermit",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["artifact_type","artifact_version","claim_label","evidence_class","scope","authorized_state","transaction_message_root","asset_execution_policy_root","timelock_root","valid_from_epoch_seconds","expires_at_epoch_seconds","approvals","signature_verification","global_asset_authorization","permit_root"],
+  "properties":{
+    "artifact_type":{"const":"AssetExecutionPermit"},
+    "artifact_version":{"const":"1.0.0"},
+    "claim_label":{"enum":["[SIM]","[A]","[RET]"]},
+    "evidence_class":{"enum":["SIMULATED","LIVE_VERIFIED"]},
+    "scope":{"const":"EXACT_TRANSACTION_ONLY"},
+    "authorized_state":{"enum":["PROPOSAL_ONLY","CANARY_CAPPED","LIMITED_LIVE","BOUNDED_PRODUCTION"]},
+    "transaction_message_root":{"$ref":"#/$defs/root"},
+    "asset_execution_policy_root":{"$ref":"#/$defs/root"},
+    "timelock_root":{"$ref":"#/$defs/root"},
+    "valid_from_epoch_seconds":{"type":"integer","minimum":0},
+    "expires_at_epoch_seconds":{"type":"integer","minimum":1},
+    "approvals":{"type":"array","minItems":3,"maxItems":4,"items":{"$ref":"#/$defs/approval"}},
+    "signature_verification":{"enum":["SIMULATED_ONLY","VERIFIED"]},
+    "global_asset_authorization":{"const":false},
+    "permit_root":{"$ref":"#/$defs/root"}
   },
-  "additionalProperties": false
+  "$defs":{
+    "root":{"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "approval":{
+      "type":"object",
+      "additionalProperties":false,
+      "required":["artifact_type","artifact_version","claim_label","evidence_class","voter_member_id","voter_public_key_fingerprint","transaction_message_root","asset_execution_policy_root","approval_reference","signature_verification","approval_root"],
+      "properties":{
+        "artifact_type":{"const":"TreasuryApprovalReference"},
+        "artifact_version":{"const":"1.0.0"},
+        "claim_label":{"enum":["[SIM]","[RET]","[A]"]},
+        "evidence_class":{"enum":["SIMULATED","LIVE_VERIFIED"]},
+        "voter_member_id":{"type":"string","minLength":1},
+        "voter_public_key_fingerprint":{"$ref":"#/$defs/root"},
+        "transaction_message_root":{"$ref":"#/$defs/root"},
+        "asset_execution_policy_root":{"$ref":"#/$defs/root"},
+        "approval_reference":{"type":"string","minLength":1},
+        "signature_verification":{"enum":["SIMULATED_ONLY","VERIFIED"]},
+        "approval_root":{"$ref":"#/$defs/root"}
+      }
+    }
+  }
 }
-
