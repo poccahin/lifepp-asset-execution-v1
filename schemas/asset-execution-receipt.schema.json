@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-receipt.schema.json",
+  "title": "AssetExecutionReceipt",
+  "type": "object",
+  "required": ["artifact_type", "artifact_version", "claim_label", "transaction_signature", "transaction_message_root", "asset_execution_policy_root", "submission_slot", "confirmed_slot", "chain_finality_status", "post_state_root", "receipt_root"],
+  "properties": {
+    "artifact_type": {"const": "AssetExecutionReceipt"},
+    "artifact_version": {"const": "1.0.0"},
+    "claim_label": {"const": "[RET]"},
+    "chain_finality_status": {"const": "FINALIZED"},
+    "submission_slot": {"type": "integer", "minimum": 0},
+    "confirmed_slot": {"type": "integer", "minimum": 0},
+    "receipt_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}
+

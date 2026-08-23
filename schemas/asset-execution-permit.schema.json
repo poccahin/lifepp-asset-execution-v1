@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-permit.schema.json",
+  "title": "AssetExecutionPermit",
+  "type": "object",
+  "required": ["artifact_type", "artifact_version", "scope", "authorized_state", "transaction_message_root", "asset_execution_policy_root", "valid_from_epoch_seconds", "expires_at_epoch_seconds", "approval_references", "global_asset_authorization"],
+  "properties": {
+    "artifact_type": {"const": "AssetExecutionPermit"},
+    "artifact_version": {"const": "1.0.0"},
+    "scope": {"const": "EXACT_TRANSACTION_ONLY"},
+    "authorized_state": {"const": "PROPOSAL_ONLY"},
+    "transaction_message_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "asset_execution_policy_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "valid_from_epoch_seconds": {"type": "integer", "minimum": 0},
+    "expires_at_epoch_seconds": {"type": "integer", "minimum": 1},
+    "approval_references": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string"}},
+    "global_asset_authorization": {"const": false}
+  },
+  "additionalProperties": false
+}
+

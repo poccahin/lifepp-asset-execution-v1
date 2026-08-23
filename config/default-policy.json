@@ -1,0 +1,27 @@
+{
+  "artifact_type": "AssetExecutionPolicy",
+  "artifact_version": "1.0.0",
+  "protocol_epoch": "lifepp.asset-execution.v1",
+  "claim_label": "[A]",
+  "current_state": "DISARMED",
+  "implementation_ceiling": "PROPOSAL_ONLY",
+  "spending_limits_enabled": false,
+  "live_execution_caps": null,
+  "required_rpc_control_domains": 2,
+  "required_treasury_threshold": 3,
+  "required_treasury_voters": 4,
+  "required_responsibility_coverage": 1,
+  "permit_max_ttl_seconds": 900,
+  "requires_separate_a4_finality": true,
+  "requires_finalized_post_state_receipt": true,
+  "transaction_submission": false,
+  "asset_execution_enabled": false,
+  "asset_recovery_executor": "DISARMED",
+  "prohibited_voter_key_holders": [
+    "CODEX",
+    "CURRENT_OPERATOR",
+    "CLOUDFLARE",
+    "AHIN.IO"
+  ]
+}
+

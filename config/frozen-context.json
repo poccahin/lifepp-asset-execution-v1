@@ -1,0 +1,27 @@
+{
+  "artifact_type": "FrozenA4Context",
+  "artifact_version": "1.0.0",
+  "claim_label": "[M]",
+  "frozen_protocol_heads": {
+    "pocc": "8902b22c04511ac60d81f9f6e6d24d48350aa4d9",
+    "ahin": "1dc061616ab16c48cfef1b165f925a2fda99db1c",
+    "cai": "6048008a0e34897b172a9c3171d34ac12c692ada",
+    "chainrank": "c2cf581c786eb35fc2f9ec789838db9a98e1829b"
+  },
+  "treasury": {
+    "vault_address": "5Cohfz6H7vHzQpp7fEdUgtrpqzG2ff2VvZTrrCUgCzRo",
+    "multisig_threshold": 3,
+    "voter_member_count": 4,
+    "display": "3-of-4",
+    "onchain_verification": "VERIFIED",
+    "funding_readiness": "BLOCKED"
+  },
+  "authority_separation": {
+    "treasury_signatures_are_activation_authorities": false,
+    "treasury_signatures_are_observer_seats": false,
+    "treasury_signatures_are_chainrank_weight": false,
+    "treasury_signatures_are_pocc_finality": false,
+    "treasury_signatures_are_merge_authorization": false
+  }
+}
+

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poccahin.github.io/schemas/lifepp.asset-execution.v1/asset-execution-policy.schema.json",
+  "title": "AssetExecutionPolicy",
+  "type": "object",
+  "required": ["artifact_type", "artifact_version", "protocol_epoch", "current_state", "implementation_ceiling", "spending_limits_enabled", "transaction_submission", "asset_execution_enabled", "asset_recovery_executor", "asset_execution_policy_root"],
+  "properties": {
+    "artifact_type": {"const": "AssetExecutionPolicy"},
+    "artifact_version": {"const": "1.0.0"},
+    "protocol_epoch": {"const": "lifepp.asset-execution.v1"},
+    "current_state": {"enum": ["DISARMED", "SHADOW", "SIMULATION_ONLY", "PROPOSAL_ONLY", "CANARY_CAPPED", "LIMITED_LIVE", "BOUNDED_PRODUCTION"]},
+    "implementation_ceiling": {"const": "PROPOSAL_ONLY"},
+    "spending_limits_enabled": {"const": false},
+    "transaction_submission": {"const": false},
+    "asset_execution_enabled": {"const": false},
+    "asset_recovery_executor": {"const": "DISARMED"},
+    "asset_execution_policy_root": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}
+

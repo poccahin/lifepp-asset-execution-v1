@@ -1,0 +1,18 @@
+{
+  "name": "lifepp-asset-execution-v1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "[A] Fail-closed A4 shadow and proposal-only implementation for Life++ asset execution.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "evidence": "node scripts/build-evidence.mjs",
+    "verify:evidence": "node scripts/verify-evidence.mjs",
+    "verify": "npm test && npm run evidence && npm run verify:evidence"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "Apache-2.0"
+}
+
