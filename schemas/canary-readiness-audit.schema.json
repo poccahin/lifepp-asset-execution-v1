@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ahin.io/schemas/lifepp.asset-execution.v1/canary-readiness-audit.schema.json",
+  "title": "AssetExecutionCanaryReadinessAudit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "artifact_version",
+    "protocol_epoch",
+    "claim_label",
+    "evidence_class",
+    "requested_transition",
+    "source_protocol_heads",
+    "asset_execution_policy_root",
+    "simulated_gate_decision_root",
+    "hard_safety_checks",
+    "activation_checks",
+    "hard_safety_invariants_satisfied",
+    "activation_prerequisites_satisfied",
+    "blockers",
+    "canary_capped_authorized",
+    "transaction_submission",
+    "asset_execution_enabled",
+    "asset_recovery_executor",
+    "readiness_audit_root"
+  ],
+  "properties": {
+    "artifact_type": { "const": "AssetExecutionCanaryReadinessAudit" },
+    "artifact_version": { "const": "1.0.0" },
+    "protocol_epoch": { "const": "lifepp.asset-execution.v1" },
+    "claim_label": { "const": "[A]" },
+    "evidence_class": { "const": "CURRENT_FAIL_CLOSED_READINESS_AUDIT" },
+    "requested_transition": { "const": "PROPOSAL_ONLY_TO_CANARY_CAPPED" },
+    "source_protocol_heads": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pocc", "ahin", "cai", "chainrank"],
+      "properties": {
+        "pocc": { "$ref": "#/$defs/commit" },
+        "ahin": { "$ref": "#/$defs/commit" },
+        "cai": { "$ref": "#/$defs/commit" },
+        "chainrank": { "$ref": "#/$defs/commit" }
+      }
+    },
+    "asset_execution_policy_root": { "$ref": "#/$defs/root" },
+    "simulated_gate_decision_root": { "$ref": "#/$defs/root" },
+    "hard_safety_checks": { "$ref": "#/$defs/checks" },
+    "activation_checks": { "$ref": "#/$defs/checks" },
+    "hard_safety_invariants_satisfied": { "type": "boolean" },
+    "activation_prerequisites_satisfied": { "type": "boolean" },
+    "blockers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "canary_capped_authorized": { "const": false },
+    "transaction_submission": { "const": false },
+    "asset_execution_enabled": { "const": false },
+    "asset_recovery_executor": { "const": "DISARMED" },
+    "readiness_audit_root": { "$ref": "#/$defs/root" }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "root": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "checks": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "boolean" }
+    }
+  }
+}

@@ -3,6 +3,7 @@
   "artifact_version": "1.0.0",
   "protocol_epoch": "lifepp.asset-execution.v1",
   "claim_label": "[A]",
+  "schema_manifest_root": "sha256:fb7dda110bd20e2e25a37df639312814c23af0831d0d83fbc02b6038ccec2b32",
   "current_state": "DISARMED",
   "implementation_ceiling": "PROPOSAL_ONLY",
   "spending_limits_enabled": false,

@@ -8,14 +8,22 @@ import {
   permitRoot,
   policyRoot,
   simulationRoot,
+  timelockRoot,
   transactionMessageRoot
 } from "../src/gates.mjs";
 import { assertTransition } from "../src/state-machine.mjs";
 import { createFinalizedReceipt } from "../src/receipt.mjs";
 import { buildSimulatedGateInput } from "../src/shadow-vector.mjs";
+import { assessCanaryReadiness } from "../src/readiness.mjs";
 
 const basePolicy = JSON.parse(await readFile(new URL("../config/default-policy.json", import.meta.url), "utf8"));
 const root=(character)=>`sha256:${character.repeat(64)}`;
+const frozenHeads={
+  pocc:"8902b22c04511ac60d81f9f6e6d24d48350aa4d9",
+  ahin:"1dc061616ab16c48cfef1b165f925a2fda99db1c",
+  cai:"6048008a0e34897b172a9c3171d34ac12c692ada",
+  chainrank:"c2cf581c786eb35fc2f9ec789838db9a98e1829b"
+};
 
 function validGateInput() {
   return buildSimulatedGateInput(basePolicy);
@@ -135,6 +143,12 @@ test("spending limits and prohibited voter-key custody fail closed", () => {
 
 test("even externally verified inputs cannot cross this repository's proposal-only ceiling",()=>{
   const input=validGateInput();
+  for(const simulation of [...input.simulations,...input.pre_execution_simulations]){
+    simulation.evidence_class="LIVE_VERIFIED";
+    simulation.verification_status="VERIFIED";
+    simulation.provider_attestation_root=root(simulation.phase==="INITIAL"?"7":"8");
+    simulation.simulation_root=simulationRoot(simulation);
+  }
   input.protocol_freeze_certificate.evidence_class="LIVE_VERIFIED";
   input.protocol_freeze_certificate.protocol_finality_proved=true;
   input.protocol_freeze_certificate.root_verification="VERIFIED";
@@ -155,8 +169,14 @@ test("even externally verified inputs cannot cross this repository's proposal-on
   input.executor.evidence_class="LIVE_VERIFIED";
   input.executor.authorization_verification="VERIFIED";
   input.executor.authorization_attestation_root=root("6");
+  input.timelock.evidence_class="LIVE_VERIFIED";
+  input.timelock.root_verification="VERIFIED";
+  input.timelock.external_verifier_attestation_root=root("9");
+  input.timelock.timelock_root=timelockRoot(input.timelock);
   input.permit.evidence_class="LIVE_VERIFIED";
   input.permit.signature_verification="VERIFIED";
+  input.permit.authorized_state="CANARY_CAPPED";
+  input.permit.timelock_root=input.timelock.timelock_root;
   input.permit.approvals=input.permit.approvals.map((approval)=>({...approval,evidence_class:"LIVE_VERIFIED",signature_verification:"VERIFIED"}));
   rerootPermit(input);
   const decision=evaluateTransactionGate(input);
@@ -165,7 +185,56 @@ test("even externally verified inputs cannot cross this repository's proposal-on
   assert.equal(decision.live_execution_prerequisites_satisfied,false);
   assert.equal(decision.transaction_submission_authorized,false);
   assert.equal(decision.asset_execution_authorized,false);
-  assert.equal(decision.maximum_authorized_state,"PROPOSAL_ONLY");
+  assert.equal(decision.maximum_authorized_state,"DISARMED");
+});
+
+test("current canary readiness is safe and explicitly blocked",()=>{
+  const input=validGateInput();
+  const audit=assessCanaryReadiness({
+    policy:input.policy,
+    gateInput:input,
+    gateDecision:evaluateTransactionGate(input),
+    context:{
+      frozen_protocol_heads:frozenHeads,
+      current_operational_state:"DISARMED",
+      canary_caps:null,
+      release_council:{present:false,distinct_from_treasury:false,authorization_root:null},
+      emergency_stop:{independently_operable:false,attestation_root:null},
+      treasury_funding_readiness:"BLOCKED",
+      treasury_authority_separation:{treasury_signatures_are_pocc_finality:false},
+      transaction_submission_surface_present:false
+    },
+    expectedFrozenHeads:frozenHeads
+  });
+  assert.equal(audit.hard_safety_invariants_satisfied,true);
+  assert.equal(audit.activation_prerequisites_satisfied,false);
+  assert.equal(audit.canary_capped_authorized,false);
+  assert.ok(audit.blockers.includes("protocol_finality_live_verified"));
+  assert.ok(audit.blockers.includes("canary_caps_rooted"));
+  assert.ok(audit.blockers.includes("treasury_funding_ready"));
+});
+
+test("canary readiness detects a changed frozen head",()=>{
+  const input=validGateInput();
+  const audit=assessCanaryReadiness({
+    policy:input.policy,
+    gateInput:input,
+    gateDecision:evaluateTransactionGate(input),
+    context:{
+      frozen_protocol_heads:{...frozenHeads,cai:"0".repeat(40)},
+      current_operational_state:"DISARMED",
+      canary_caps:null,
+      release_council:{present:false,distinct_from_treasury:false,authorization_root:null},
+      emergency_stop:{independently_operable:false,attestation_root:null},
+      treasury_funding_readiness:"BLOCKED",
+      treasury_authority_separation:{treasury_signatures_are_pocc_finality:false},
+      transaction_submission_surface_present:false
+    },
+    expectedFrozenHeads:frozenHeads
+  });
+  assert.equal(audit.hard_safety_checks.frozen_protocol_heads_unchanged,false);
+  assert.equal(audit.hard_safety_invariants_satisfied,false);
+  assert.equal(audit.canary_capped_authorized,false);
 });
 
 test("proposal module exports no signing or submission surface", () => {

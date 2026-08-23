@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ahin.io/schemas/lifepp.asset-execution.v1/asset-execution-timelock.schema.json",
+  "title": "AssetExecutionTimelock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "artifact_version",
+    "claim_label",
+    "evidence_class",
+    "root_verification",
+    "external_verifier_attestation_root",
+    "transaction_message_root",
+    "asset_execution_policy_root",
+    "created_at_epoch_seconds",
+    "release_at_epoch_seconds",
+    "expires_at_epoch_seconds",
+    "timelock_root"
+  ],
+  "properties": {
+    "artifact_type": { "const": "AssetExecutionTimelock" },
+    "artifact_version": { "const": "1.0.0" },
+    "claim_label": { "enum": ["[SIM]", "[A]", "[RET]"] },
+    "evidence_class": { "enum": ["SIMULATED", "LIVE_VERIFIED"] },
+    "root_verification": { "enum": ["SIMULATED_ONLY", "VERIFIED"] },
+    "external_verifier_attestation_root": {
+      "anyOf": [{ "$ref": "#/$defs/root" }, { "type": "null" }]
+    },
+    "transaction_message_root": { "$ref": "#/$defs/root" },
+    "asset_execution_policy_root": { "$ref": "#/$defs/root" },
+    "created_at_epoch_seconds": { "type": "integer", "minimum": 0 },
+    "release_at_epoch_seconds": { "type": "integer", "minimum": 0 },
+    "expires_at_epoch_seconds": { "type": "integer", "minimum": 1 },
+    "timelock_root": { "$ref": "#/$defs/root" }
+  },
+  "$defs": {
+    "root": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}
