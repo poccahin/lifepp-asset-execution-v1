@@ -54,6 +54,14 @@ function simulationSetChecks(simulations, expectedMessageRoot, expectedPolicyRoo
   };
 }
 
+function simulationsLiveVerified(simulations) {
+  return Array.isArray(simulations)
+    && simulations.length === 2
+    && simulations.every((item) => item.evidence_class === "LIVE_VERIFIED"
+      && item.verification_status === "VERIFIED"
+      && ROOT.test(item.provider_attestation_root));
+}
+
 export function evaluateTransactionGate(input) {
   const {
     policy,
@@ -85,6 +93,7 @@ export function evaluateTransactionGate(input) {
 
   const proposalChecks = {
     policy_root_exact: policy.asset_execution_policy_root === expectedPolicyRoot,
+    schema_manifest_root_present: ROOT.test(policy.schema_manifest_root),
     message_root_exact: message.transaction_message_root === expectedMessageRoot,
     spending_limits_disabled: policy.spending_limits_enabled === false && policy.live_execution_caps === null,
     policy_ceiling_proposal_only: policy.implementation_ceiling === "PROPOSAL_ONLY",
@@ -166,9 +175,15 @@ export function evaluateTransactionGate(input) {
     pocc_live_verified: pocc.evidence_class === "LIVE_VERIFIED" && pocc.root_verification === "VERIFIED" && ROOT.test(pocc.external_verifier_attestation_root),
     challenge_live_closed: challenge.evidence_class === "LIVE_VERIFIED" && challenge.root_verification === "VERIFIED" && ROOT.test(challenge.external_verifier_attestation_root),
     responsibility_live_verified: responsibility.evidence_class === "LIVE_VERIFIED" && responsibility.root_verification === "VERIFIED" && ROOT.test(responsibility.external_verifier_attestation_root),
+    initial_rpc_live_verified: simulationsLiveVerified(simulations),
+    pre_execution_rpc_live_verified: simulationsLiveVerified(preExecution),
+    timelock_live_verified: timelock.evidence_class === "LIVE_VERIFIED"
+      && timelock.root_verification === "VERIFIED"
+      && ROOT.test(timelock.external_verifier_attestation_root),
     treasury_approvals_cryptographically_verified: approvals.length >= treasury.multisig_threshold
       && approvals.every((approval) => approval.evidence_class === "LIVE_VERIFIED" && approval.signature_verification === "VERIFIED"),
     permit_live_verified: permit.evidence_class === "LIVE_VERIFIED" && permit.signature_verification === "VERIFIED",
+    permit_authorizes_canary_capped: permit.authorized_state === "CANARY_CAPPED",
     independent_executor_authorized: input.executor?.evidence_class === "LIVE_VERIFIED"
       && input.executor?.role === "INDEPENDENT_EXECUTOR"
       && input.executor?.transaction_message_root === expectedMessageRoot
